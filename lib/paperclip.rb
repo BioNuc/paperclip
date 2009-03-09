@@ -25,6 +25,7 @@
 #
 # See the +has_attached_file+ documentation for more details.
 
+require 'open-uri'
 require 'tempfile'
 require 'paperclip/upfile'
 require 'paperclip/iostream'
@@ -203,6 +204,15 @@ module Paperclip
       define_method "#{name}=" do |file|
         attachment_for(name).assign(file)
       end
+
+			define_method "#{name}_url=" do |file_url|
+        begin
+          file = open(URI.parse(file_url))
+          send("#{name}=", file)
+        rescue
+          #Not handled yet
+        end
+      end			
 
       define_method "#{name}?" do
         attachment_for(name).file?
